@@ -9,7 +9,45 @@ class RecipeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recipeState = ref.watch(recipeNotifierProvider);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text("Delicious food recipes")),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.orange),
+              child: Text(
+                "Food Filter",
+                style: TextStyle(fontSize: 24, color: Colors.white),
+              ),
+            ),
+            Consumer(
+              builder: ((context, ref, child) {
+                final islactosFree = ref.watch(lactoseFreeFilterProvider);
+                return SwitchListTile(
+                  title: Text("lactos free"),
+                  value: islactosFree,
+                  onChanged: (value) {
+                    ref.read(lactoseFreeFilterProvider.notifier).state = value;
+                  },
+                );
+              }),
+            ),
+            Consumer(
+              builder: ((context, ref, child) {
+                final isglutenFree = ref.watch(glutenFreeFilterProvider);
+                return SwitchListTile(
+                  title: Text("Gluten free"),
+                  value: isglutenFree,
+                  onChanged: (value) {
+                    ref.read(glutenFreeFilterProvider.notifier).state = value;
+                  },
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
       body: recipeState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => Center(child: Text(error.toString())),
@@ -30,7 +68,15 @@ class RecipeScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.food_bank, size: 50, color: Colors.orange),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        recipe.image,
+                        height: 100,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     Text(
                       recipe.name,
