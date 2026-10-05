@@ -2,11 +2,11 @@ class Recipe{
   Recipe({required this.id, required this.name, required this.instructions, required this.ingredients});
   final int id;
   final String name;
-  final List<St> instructions;
+  final List<String> instructions;
   final List<String> ingredients;
 
 
-  Recipe copyWith(int? id,String? name,String? instructions,List<String>? ingredients){
+  Recipe copyWith(int? id,String? name,List<String>? instructions,List<String>? ingredients){
     return Recipe(
       id: id?? this.id, 
       name: name??this.name, 
@@ -25,7 +25,7 @@ factory Recipe.fromJson(Map<String,dynamic> json){
 return Recipe(
   id:json["id"] as int, 
   name: json["name"] as String,
-  instructions: json["instructions"] as String,
+  instructions: List<String>.from(json["instructions"] as List),
   ingredients: List<String>.from(json["ingredients"] as List)
   );
 }
