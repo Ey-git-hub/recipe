@@ -36,5 +36,10 @@ class AuthNotifier extends AsyncNotifier<String?> {
     }
     return false;
   }
+  Future<void> logOut() async{
+    await _storage.delete(key: "jwt_token");
+    state=AsyncValue.data(null);
+
+  }
 }
 final authNotifierProvider=AsyncNotifierProvider<AuthNotifier,String?>(AuthNotifier.new);
