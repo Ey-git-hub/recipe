@@ -32,7 +32,6 @@
           child: Card(
             child: Padding(
               padding: EdgeInsets.all(12),
-              
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -48,6 +47,7 @@
                         }
                         return null;
                       },
+                      
                     ),
                     SizedBox(height: 14),
                     TextFormField(
