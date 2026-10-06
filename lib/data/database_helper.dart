@@ -34,4 +34,12 @@ class DatabaseHelper {
     final db=await database;
     await db.insert("favorites", recipe.toJson(),conflictAlgorithm: ConflictAlgorithm.replace);
   }
+  Future<List<Map<String,dynamic>>> getFavorites() async{
+    final db=await database;
+    return await db.query('favorites');
+  }
+  Future<void> deleteFavorite(int id) async{
+    final db=await database;
+    await db.delete('favorites',where: 'id=?',whereArgs: [id]);
+  }
 }
