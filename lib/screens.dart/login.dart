@@ -32,10 +32,12 @@
           child: Card(
             child: Padding(
               padding: EdgeInsets.all(12),
+              
               child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
                       controller: _usernameController,
@@ -50,7 +52,7 @@
                     SizedBox(height: 14),
                     TextFormField(
                       controller: _passwordController,
-                      decoration: InputDecoration(labelText: "Username"),
+                      decoration: InputDecoration(labelText: "Password"),
                       validator: (value){
                         if(value==null||value.trim().isEmpty){
                           return "Invalid password";
@@ -58,7 +60,10 @@
                         return null;
                       },
                     ),
-                    ElevatedButton(onPressed: _login, child: Text('Login'))
+                    SizedBox(height: 17,),
+                    ElevatedButton(onPressed: _login, child: Text('Login')),
+                    SizedBox(height:8),
+                    TextButton(onPressed: (){}, child: Text("I dont have account"))
                   ],
                 ),
               ),
