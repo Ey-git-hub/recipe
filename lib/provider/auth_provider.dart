@@ -32,7 +32,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
         return true;
       }
     } on DioException catch (e) {
-      print('Login failed: ${e.response?.data   ?? e.message}');
+      print('Login failed: ${e.response?.data ?? e.message}');
     }
     return false;
   }
