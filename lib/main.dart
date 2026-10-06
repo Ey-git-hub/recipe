@@ -19,15 +19,10 @@ class MyApp extends ConsumerWidget {
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
       home: authState.when(
-        data: (token){
-        if(token==null){
-          return const LoginScreen();
-        }else{
-          return const RecipeScreen();
-        }
-        }, 
+        data: (token)=>token==null ? const LoginScreen(): const RecipeScreen()
+        , 
         error: (error,stack)=>Scaffold(body: Center(child: Text('Error $error'),),),
         loading: ()=>Scaffold(body: Center(child: CircularProgressIndicator(),),)),
-    );
+    );  
   }
 }
