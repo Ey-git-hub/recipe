@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recipe/provider/auth_provider.dart';
 import 'package:recipe/provider/recipe_provider.dart';
 import 'package:recipe/screens.dart/details_screen.dart';
 
@@ -10,7 +11,12 @@ class RecipeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recipeState = ref.watch(filteredRecipesProvider);
     return Scaffold(
-      appBar: AppBar(title: Text("Delicious food recipes")),
+      appBar: AppBar(title: Text("Delicious food recipes"), 
+      actions: [
+        IconButton(onPressed: (){
+          ref.read(authNotifierProvider.notifier).logOut();
+        }, icon: Icon(Icons.exit_to_app))
+      ]),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -63,8 +69,13 @@ class RecipeScreen extends ConsumerWidget {
           itemBuilder: (context, index) {
             final recipe = recipes[index];
             return GestureDetector(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>RecipesDetailsScreen(recipe: recipe,)));
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecipesDetailsScreen(recipe: recipe),
+                  ),
+                );
               },
               child: Card(
                 elevation: 3,
@@ -87,7 +98,7 @@ class RecipeScreen extends ConsumerWidget {
                         recipe.name,
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontWeight: FontWeight.bold),
-                        maxLines: 2, 
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
