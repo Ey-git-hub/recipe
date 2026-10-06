@@ -87,7 +87,7 @@ class RecipeScreen extends ConsumerWidget {
                         recipe.name,
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontWeight: FontWeight.bold),
-                        maxLines: 2, // ስሙ በጣም ረጅም ከሆነ እንዳይበላሽ
+                        maxLines: 2, 
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
