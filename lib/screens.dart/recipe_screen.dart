@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe/provider/auth_provider.dart';
+import 'package:recipe/provider/favorites_provider.dart';
 import 'package:recipe/provider/recipe_provider.dart';
 import 'package:recipe/screens.dart/details_screen.dart';
 
@@ -10,13 +11,19 @@ class RecipeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recipeState = ref.watch(filteredRecipesProvider);
+    final favoritesState = ref.watch(favoriteRecipesNotifier);
     return Scaffold(
-      appBar: AppBar(title: Text("Delicious food recipes"), 
-      actions: [
-        IconButton(onPressed: (){
-          ref.read(authNotifierProvider.notifier).logOut();
-        }, icon: Icon(Icons.exit_to_app))
-      ]),
+      appBar: AppBar(
+        title: Text("Delicious food recipes"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(authNotifierProvider.notifier).logOut();
+            },
+            icon: Icon(Icons.exit_to_app),
+          ),
+        ],
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -100,6 +107,41 @@ class RecipeScreen extends ConsumerWidget {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
+                      ),
+                      favoritesState.when(
+                        loading: () => const SizedBox.shrink(),
+                        error: (error, stackTrace) => const SizedBox.shrink(),
+                        data: (favList) {
+                          final isFav = favList.any((r) => r.id == recipe.id);
+                          return Row(
+                            key: ValueKey('fav-row-${recipe.id}-$isFav'),
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  ref
+                                      .read(favoriteRecipesNotifier.notifier)
+                                      .toggleFavorite(recipe);
+                                },
+                                icon: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 300),
+                                  transitionBuilder: (child, animation) =>
+                                      ScaleTransition(
+                                        scale: animation,
+                                        child: child,
+                                      ),
+                                  child: Icon(
+                                    isFav
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+
+                                    color: isFav ? Colors.red : Colors.grey,
+                                    key: ValueKey<bool>(isFav),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),
