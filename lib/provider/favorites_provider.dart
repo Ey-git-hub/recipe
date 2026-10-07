@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:recipe/data/database_helper.dart';
 import 'package:recipe/model/recipe.dart';
 
@@ -23,3 +24,4 @@ void toggleFavorite(Recipe recipe)async{
 }
 }
 final favoriteRecipesNotifier=AsyncNotifierProvider<FavoriteRecipesNotifier,List<Recipe>>(FavoriteRecipesNotifier.new);
+final navigationIndexProvider=StateProvider<int>((ref)=>0);
