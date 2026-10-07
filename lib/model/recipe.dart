@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Recipe {
   Recipe({
     required this.id,
@@ -27,23 +29,31 @@ class Recipe {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "name": name,
-      "instructions": instructions,
-      "ingredients": ingredients,
-      "image":image
-    };
+ Map<String, dynamic> toJson() {
+  return {
+    "id": id,
+    "name": name,
+    "image": image,
+    // jsonEncode ዝርዝሩን ወደ ጽሑፍ (String) ይቀይረዋል
+    "instructions": jsonEncode(instructions), 
+    "ingredients": jsonEncode(ingredients),
+  };
+}
+
+
+ factory Recipe.fromJson(Map<String, dynamic> json) {
+  return Recipe(
+    id: json["id"] as int,
+    name: json["name"] as String,
+    image: json["image"] as String,
+    instructions: json["instructions"] is String 
+        ? List<String>.from(jsonDecode(json["instructions"]))
+        : List<String>.from(json["instructions"] as List),
+    ingredients: json["ingredients"] is String 
+        ? List<String>.from(jsonDecode(json["ingredients"]))
+        : List<String>.from(json["ingredients"] as List),
+  );
+}
+
   }
 
-  factory Recipe.fromJson(Map<String, dynamic> json) {
-    return Recipe(
-      id: json["id"] as int,
-      name: json["name"] as String,
-      instructions: List<String>.from(json["instructions"] as List),
-      ingredients: List<String>.from(json["ingredients"] as List),
-      image: json["image"]as String
-    );
-  }
-}
