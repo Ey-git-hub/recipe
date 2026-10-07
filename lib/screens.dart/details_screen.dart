@@ -7,7 +7,10 @@ class RecipesDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(recipe.name)),
+      appBar: AppBar(title: Text(recipe.name),
+       actions: [
+        IconButton(onPressed: (){}, icon: Icon(Icons.heart_broken_outlined))
+       ]),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,11 +58,15 @@ class RecipesDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 25),
-                   Text(
-                    recipe.instructions.asMap().entries.map((entry) {
-                      int idx = entry.key + 1;
-                      return '$idx. ${entry.value}';
-                    }).join('\n\n'),
+                  Text(
+                    recipe.instructions
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                          int idx = entry.key + 1;
+                          return '$idx. ${entry.value}';
+                        })
+                        .join('\n\n'),
                     style: const TextStyle(fontSize: 16, height: 1.5),
                   ),
                 ],
