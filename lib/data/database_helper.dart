@@ -19,13 +19,15 @@ class DatabaseHelper {
       dbPath,
       version: 1,
       onCreate: (db, async) async {
-        await db.execute('''
-      CREATE TABLE favorites(
+        await  db.execute('''
+    CREATE TABLE favorites (
       id INTEGER PRIMARY KEY,
       name TEXT,
-      image TEXT
-      )
-''');
+      image TEXT,
+      instructions TEXT, 
+      ingredients TEXT   
+    )
+  ''');
       },
     );
   }
