@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe/provider/auth_provider.dart';
-import 'package:recipe/screens.dart/login.dart';
-import 'package:recipe/screens.dart/recipe_screen.dart';
+import 'package:recipe/screens/login.dart';
+import 'package:recipe/screens/recipe_screen.dart';
 import 'package:recipe/widgets/main_navigation_screen.dart';
 
 void main() {
