@@ -34,7 +34,6 @@ class Recipe {
     "id": id,
     "name": name,
     "image": image,
-    // jsonEncode ዝርዝሩን ወደ ጽሑፍ (String) ይቀይረዋል
     "instructions": jsonEncode(instructions), 
     "ingredients": jsonEncode(ingredients),
   };
