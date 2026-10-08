@@ -19,7 +19,9 @@ class AuthNotifier extends AsyncNotifier<String?> {
   }
 
   Future<bool> loginAndSave(String username, String password) async {
-    try{final response = await _dio.post(
+    try
+    {
+      final response = await _dio.post(
       "https://dummyjson.com/auth/login",
       data: {'username': username, 'password': password},
       options: Options(headers: {'Content-Type': 'application/json'}),
