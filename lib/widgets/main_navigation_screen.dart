@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe/provider/favorites_provider.dart';
-import 'package:recipe/screens.dart/favorites_screen.dart';
-import 'package:recipe/screens.dart/recipe_screen.dart';
+import 'package:recipe/screens/favorites_screen.dart';
+import 'package:recipe/screens/recipe_screen.dart';
 
 class MainNavigationScreen extends ConsumerWidget {
   const MainNavigationScreen({super.key});
