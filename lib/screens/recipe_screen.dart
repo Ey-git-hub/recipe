@@ -84,67 +84,114 @@ class RecipeScreen extends ConsumerWidget {
                   ),
                 );
               },
-              child: Card(
-                elevation: 3,
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          recipe.image,
-                          height: 100,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+              child: Container(
+                // ለካርዱ ውብ ጠርዝና ፈዛዛ ጥላ እዚህ ጋር እንሰጠዋለን
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(16), // የዳር ጠርዞቹን በሚገባ ማጠፍ
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05), // በጣም ስስ የሆነ ውብ ጥላ
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start, // ጽሑፎቹ ከግራ እንዲጀምሩ
+                  children: [
+                    // 1. *** ፎቶውን እና የልብ ቁልፉን በአንድ ላይ የያዘው STACK ***
+                    Stack(
+                      children: [
+                        // የምግቡ ፎቶ
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                          child: Image.network(
+                            recipe.image,
+                            height: 120,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
+                        // የልብ ቁልፉን በፎቶው ላይ በቀኝ በኩል ጥግ ላይ ለመስቀል Positioned እንጠቀማለን
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            // በልብ ቁልፉ ዙሪያ ነጭ ክብ ጥላ እንዲኖረው ያደርጋል (ቁልፉ ጎልቶ እንዲታይ)
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.9),
+                              shape: BoxShape.circle,
+                            ),
+                            child: favoritesState.when(
+                              loading: () => const SizedBox.shrink(),
+                              error: (error, stackTrace) =>
+                                  const SizedBox.shrink(),
+                              data: (favList) {
+                                final isFav = favList.any(
+                                  (r) => r.id == recipe.id,
+                                );
+                                return Row(
+                                  key: ValueKey('fav-row-${recipe.id}-$isFav'),
+                                  children: [
+                                    IconButton(
+                                      constraints: const BoxConstraints(), // የነባሪውን IconButton padding ለማጥፋት
+                                      padding: const EdgeInsets.all(8),
+                                      onPressed: () {
+                                        ref
+                                            .read(
+                                              favoriteRecipesNotifier.notifier,
+                                            )
+                                            .toggleFavorite(recipe);
+                                      },
+                                      icon: AnimatedSwitcher(
+                                        duration: const Duration(
+                                          milliseconds: 300,
+                                        ),
+                                        transitionBuilder: (child, animation) =>
+                                            ScaleTransition(
+                                              scale: animation,
+                                              child: child,
+                                            ),
+                                        child: Icon(
+                                          isFav
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: isFav
+                                              ? Colors.red
+                                              : Colors.grey,
+                                          key: ValueKey<bool>(isFav),
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // 2. የምግቡ ስም የሚቀመጥበት የታችኛው የካርዱ ክፍል
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(
                         recipe.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      favoritesState.when(
-                        loading: () => const SizedBox.shrink(),
-                        error: (error, stackTrace) => const SizedBox.shrink(),
-                        data: (favList) {
-                          final isFav = favList.any((r) => r.id == recipe.id);
-                          return Row(
-                            key: ValueKey('fav-row-${recipe.id}-$isFav'),
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  ref
-                                      .read(favoriteRecipesNotifier.notifier)
-                                      .toggleFavorite(recipe);
-                                },
-                                icon: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 300),
-                                  transitionBuilder: (child, animation) =>
-                                      ScaleTransition(
-                                        scale: animation,
-                                        child: child,
-                                      ),
-                                  child: Icon(
-                                    isFav
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-
-                                    color: isFav ? Colors.red : Colors.grey,
-                                    key: ValueKey<bool>(isFav),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );
