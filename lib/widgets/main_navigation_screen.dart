@@ -10,11 +10,12 @@ class MainNavigationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex=ref.watch(navigationIndexProvider);
-    return Scaffold(body: IndexedStack(
+    return Scaffold(
+      body: IndexedStack(
       index: selectedIndex,
       children: [
-        RecipeScreen(),
-        FavoritesScreen()
+        RecipeScreen(),//index 0
+        FavoritesScreen()//index 1
       ],
     ),
     bottomNavigationBar: BottomNavigationBar(currentIndex:selectedIndex ,items: [
@@ -22,7 +23,7 @@ BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home',),
 BottomNavigationBarItem(icon: Icon(Icons.favorite,),label: 'Favorites',),
     ],
     onTap: (index){
-      ref.read(navigationIndexProvider.notifier).state=selectedIndex;
+      ref.read(navigationIndexProvider.notifier).state=index;
     
     },),);
   }
