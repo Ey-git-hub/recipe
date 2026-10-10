@@ -17,7 +17,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Recipe',
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: authState.when(
         data: (token)=>token==null ? const LoginScreen(): const MainNavigationScreen()
