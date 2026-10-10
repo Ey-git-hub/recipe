@@ -36,11 +36,11 @@ class NotificationService {
     required int secondsLater,
   }) async {
     const AndroidNotificationDetails androidDtails = AndroidNotificationDetails(
-      'recipe_reminder_channel_id',
+      'recipe_reminder_channel_2',
       "Recipe Reminders",
       channelDescription: 'Channel for recipe cooking reminders',
       importance: Importance.max,
-      priority: Priority.max,
+      priority: Priority.high,
     );
     const NotificationDetails notificationDetails = NotificationDetails(
       android: androidDtails,
@@ -53,7 +53,7 @@ class NotificationService {
       body: body,
       scheduledDate: scheduledTime, // እዚህ ጋ ያሰላኸውን የወደፊት ሰዓት ትሰጠዋለህ
       notificationDetails: notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }
 }
