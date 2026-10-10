@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe/provider/favorites_provider.dart';
+import 'package:recipe/screens/details_screen.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
@@ -10,16 +11,16 @@ class FavoritesScreen extends ConsumerWidget {
     final favState = ref.watch(favoriteRecipesNotifier);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("የተወዳጅ ምግቦች ዝርዝር")),
+      appBar: AppBar(title: const Text("Favorites Recipe List")),
       body: favState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('ስህተት ተከስቷል፦ $error')),
+        error: (error, stack) => Center(child: Text('Error $error')),
         
         data: (favorites) {
           if (favorites.isEmpty) {
             return const Center(
               child: Text(
-                'ምንም ተወዳጅ ያደረግከው ምግብ የለም!',
+                'No Favorites recipe added!',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             );
@@ -37,56 +38,61 @@ class FavoritesScreen extends ConsumerWidget {
             itemBuilder: (BuildContext context, int index) {
               final fav = favorites[index];
               
-              return Card(
-                elevation: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          fav.image,
-                          height: 100,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+              return InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>RecipesDetailsScreen(recipe: fav)));
+                },
+                child: Card(
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            fav.image,
+                            height: 100,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        fav.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 5),
+                        const SizedBox(height: 10),
+                        Text(
+                          fav.name,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 5),
+                        
                       
-                    
-                      Row(
-                        key: ValueKey('fav-screen-row-${fav.id}'),
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              
-                              ref.read(favoriteRecipesNotifier.notifier).toggleFavorite(fav);
-                            },
-                            icon: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
-                              transitionBuilder: (child, animation) =>
-                                  ScaleTransition(scale: animation, child: child),
-                              child: const Icon(
-                                Icons.favorite, 
-                                color: Colors.red,
-                                key: ValueKey<bool>(true),
+                        Row(
+                          key: ValueKey('fav-screen-row-${fav.id}'),
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                
+                                ref.read(favoriteRecipesNotifier.notifier).toggleFavorite(fav);
+                              },
+                              icon: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                transitionBuilder: (child, animation) =>
+                                    ScaleTransition(scale: animation, child: child),
+                                child: const Icon(
+                                  Icons.favorite, 
+                                  color: Colors.red,
+                                  key: ValueKey<bool>(true),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ); // 
