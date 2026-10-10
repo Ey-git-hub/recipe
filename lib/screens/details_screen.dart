@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe/model/recipe.dart';
+import 'package:recipe/notification/notification_service.dart';
 
 class RecipesDetailsScreen extends StatelessWidget {
   const RecipesDetailsScreen({super.key, required this.recipe});
@@ -7,10 +8,12 @@ class RecipesDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(recipe.name),
-       actions: [
-        IconButton(onPressed: (){}, icon: Icon(Icons.heart_broken_outlined))
-       ]),
+      appBar: AppBar(
+        title: Text(recipe.name),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.heart_broken_outlined)),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +28,12 @@ class RecipesDetailsScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(13),
+              padding: EdgeInsets.only(
+                top: 13,
+                bottom: 45,
+                left: 13,
+                right: 13,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -68,6 +76,58 @@ class RecipesDetailsScreen extends StatelessWidget {
                         })
                         .join('\n\n'),
                     style: const TextStyle(fontSize: 16, height: 1.5),
+                  ),
+                  SizedBox(height: 12),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        // ማሻሻያ 1፦ የ context መጥፋትን ለመከላከል ScaffoldMessengerን እዚህ አናት ላይ እንይዘዋለን
+                        final messenger = ScaffoldMessenger.of(context);
+
+                        try {
+                          // 1. የኖቲፊኬሽን ጥሪውን እንሞክራለን
+                          await NotificationService.instance
+                              .scheduleNotification(
+                                id: recipe.id,
+                                title: 'የማብሰያ ማሳሰቢያ! 🍳',
+                                body: 'ዛሬ ማታ "${recipe.name}" ማብሰል እንዳትረሳ!',
+                                secondsLater: 5,
+                              );
+
+                          // 2. የ async ሥራው ካለቀ በኋላ ገጹ አለመዘጋቱን እናረጋግጣለን
+                          if (!context.mounted) return;
+
+                          // 3. አናት ላይ የያዝነውን 'messenger' ተለዋዋጭ ተጠቅመን SnackBarውን እናሳያለን
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'ለ "${recipe.name}" የማብሰያ ማሳሰቢያ ከ 5 ሰከንድ በኋላ ይታያል!',
+                              ),
+                              backgroundColor: Colors.green,
+                              duration: const Duration(seconds: 3),
+                            ),
+                          );
+                        } catch (e) {
+                          // 4. *** ዋነኛው መመርመሪያ እዚህ ጋ ነው ***
+                          // ኖቲፊኬሽኑ እምቢ ካለ ስህተቱን በ SnackBar በኩል በስክሪኑ ላይ ያሳየናል
+                          if (!context.mounted) return;
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text('Error: ${e.toString()}'),
+                              backgroundColor: Colors.red,
+                              duration: const Duration(seconds: 5),
+                            ),
+                          );
+                        }
+                      },
+
+                      icon: Icon(Icons.alarm),
+                      label: Text("Cook this recipe tonight!"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),
